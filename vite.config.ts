@@ -10,4 +10,18 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  build: {
+    rollupOptions: {
+      input: {
+        main: path.resolve(__dirname, "index.html"),
+        content: path.resolve(__dirname, "src/Content/content.ts"),
+      },
+      // Output the content script as content.js instead of typescript file
+      output: {
+        entryFileNames: (chunk) => {
+          return chunk.name === "content" ? "content.js" : "[name].[hash].js"
+        }
+      }
+    }
+  }
 })
