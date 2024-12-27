@@ -119,7 +119,7 @@ function Popup() {
 
   return (
     <main className='h-[100vh] w-[100vw] flex flex-col justify-center items-center'>
-      <Card className='w-[350px] h-fit min-h-[200px] mx-auto bg-transparent flex items-center flex-col gap-[1rem] text-white'>
+      <Card className='w-[300px] h-fit min-h-[200px] mx-auto bg-transparent flex items-center flex-col gap-[1rem] text-white'>
         <CardHeader>
           <CardTitle className='text-center'><h1>Actions</h1></CardTitle>
         </CardHeader>
