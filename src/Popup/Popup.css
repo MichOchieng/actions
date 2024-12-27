@@ -1,0 +1,12 @@
+@tailwind components;
+
+
+@layer components {
+  .edit-button {
+    @apply bg-green-500 ;
+  }
+
+  .preview-button {
+    @apply bg-white text-black;
+  }
+}
