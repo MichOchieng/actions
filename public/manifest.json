@@ -8,10 +8,10 @@
     },
     "permissions": ["activeTab"],
     "icons": {},
-    "content_scritps": [
+    "content_scripts": [
         {
             "matches": ["<all_urls>"],
-            "js": ["src/Content/content.ts"]
+            "js": ["content.js"]
         }
     ],
     "options_page": ""
