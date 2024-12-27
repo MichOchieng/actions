@@ -31,6 +31,10 @@
     --radius: 0.5rem;
   }
 
+  body {
+    @apply min-w-[320px] 
+  }
+
   h1 {
     @apply text-[2rem];
   }
