@@ -84,7 +84,7 @@ function Popup() {
           return;
         }
 
-        setPageInfo(prev => ({ ...prev, canonicalUrl })); 
+        setPageInfo(prev => ({ ...prev, canonicalUrl }));
         return canonicalUrl;
       } catch (error) {
         console.error('Canonical URL error:', error);
@@ -144,21 +144,21 @@ function Popup() {
               pageInfo.hasSitefinity && pageInfo.canonicalUrl ? (
                 // Has Sitefinity CMS & canonical URL
                 <>
-                  <Button onClick={() => handleClick('edit')}>Edit</Button>
-                  <Button onClick={() => handleClick('preview')}>Preview</Button>
+                  <Button className='edit-button' onClick={() => handleClick('edit')}>Edit</Button>
+                  <Button className='preview-button' onClick={() => handleClick('preview')}>Preview</Button>
                 </>
               ) : (
                 // No Sitefinity CMS
                 <>
-                  <Button disabled>Edit</Button>
-                  <Button disabled>Preview</Button>
+                  <Button className='edit-button' disabled>Edit</Button>
+                  <Button className='preview-button' disabled>Preview</Button>
                 </>
               )
             )
           }
         </CardContent>
         {/* Footer info */}
-        <CardFooter>
+        <CardFooter className='flex flex-col gap-[1rem]'>
           {isLoading ? <p className='text-yellow-300'>Checking page...</p> : (pageInfo.errorMessage ? <p className='text-red-500'>{pageInfo.errorMessage}</p> : null)}
         </CardFooter>
       </Card>
