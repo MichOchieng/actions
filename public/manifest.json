@@ -1,13 +1,18 @@
 {
     "manifest_version": 3,
-    "version": "0.0.1",
-    "name": "Chrome Extension Starter",
-    "description": "A Chrome extension starter template",
+    "version": "0.1",
+    "name": "Actions",
+    "description": "This extension is made for quickly editing and previewing webpages built with Sitefinity CMS.",
     "action": {
         "default_popup": "index.html"
     },
-    "permissions": ["activeTab", "scripting"],
+    "permissions": ["activeTab"],
     "icons": {},
-    "content_scritps": [],
+    "content_scritps": [
+        {
+            "matches": ["<all_urls>"],
+            "js": ["src/Content/content.ts"]
+        }
+    ],
     "options_page": ""
 }
