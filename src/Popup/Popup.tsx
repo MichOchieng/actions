@@ -84,7 +84,8 @@ function Popup() {
           return;
         }
 
-        setPageInfo(prev => ({ ...prev, canonicalUrl }));
+        setPageInfo(prev => ({ ...prev, canonicalUrl })); 
+        return canonicalUrl;
       } catch (error) {
         console.error('Canonical URL error:', error);
         setPageInfo(prev => ({
@@ -105,6 +106,7 @@ function Popup() {
 
         await checkSitefinity(baseURL);
         await getCanonicalUrl();
+
         setIsLoading(false);
       } catch (error) {
         console.error('Init error:', error);
@@ -116,10 +118,17 @@ function Popup() {
     init();
   }, []);
 
+  const handleClick = (type: string) => {
+    const newUrl = type === 'edit' ? pageInfo.canonicalUrl?.concat('/action/edit') : pageInfo.canonicalUrl?.concat('/action/preview');
+
+    chrome.tabs.create({ url: newUrl });
+  }
+
+
 
   return (
     <main className='h-[100vh] w-[100vw] flex flex-col justify-center items-center'>
-      <Card className='w-[300px] h-fit min-h-[200px] mx-auto bg-transparent flex items-center flex-col gap-[1rem] text-white'>
+      <Card className='w-[300px] h-fit min-h-[200px] mx-auto bg-transparent flex items-center flex-col gap-[1rem] text-white border-none '>
         <CardHeader>
           <CardTitle className='text-center'><h1>Actions</h1></CardTitle>
         </CardHeader>
@@ -132,11 +141,11 @@ function Popup() {
                 <BeatLoader color='#fff' loading={isLoading} />
               </>
             ) : (
-              pageInfo.hasSitefinity ? (
-                // Has Sitefinity CMS
+              pageInfo.hasSitefinity && pageInfo.canonicalUrl ? (
+                // Has Sitefinity CMS & canonical URL
                 <>
-                  <Button>Edit</Button>
-                  <Button>Preview</Button>
+                  <Button onClick={() => handleClick('edit')}>Edit</Button>
+                  <Button onClick={() => handleClick('preview')}>Preview</Button>
                 </>
               ) : (
                 // No Sitefinity CMS
@@ -150,7 +159,7 @@ function Popup() {
         </CardContent>
         {/* Footer info */}
         <CardFooter>
-          {isLoading ? <p>Checking page...</p> : (pageInfo.errorMessage ? <p>{pageInfo.errorMessage}</p> : null)}
+          {isLoading ? <p className='text-yellow-300'>Checking page...</p> : (pageInfo.errorMessage ? <p className='text-red-500'>{pageInfo.errorMessage}</p> : null)}
         </CardFooter>
       </Card>
     </main>
