@@ -45,25 +45,40 @@ function Popup() {
       }
     }
 
-    async function checkSitefinity(baseURL: string) {
+    async function hasSitefinityGenerator(): Promise<boolean> {
       try {
-        const response = await fetch(`${baseURL}/sitefinity`);
-
-        if (!response.ok) {
+        if (!tabIDRef.current) {
           setPageInfo(prev => ({
             ...prev,
-            errorMessage: 'Sitefinity CMS not found on this domain!'
+            errorMessage: 'No tab id found!'
           }));
-          return;
+          return false;
+        }
+
+        const generator = await chrome.tabs.sendMessage(
+          tabIDRef.current,
+          { type: 'GET_GENERATOR' }
+        );
+
+        if (generator !== 'Sitefinity') {
+          setPageInfo(prev => ({
+            ...prev,
+            errorMessage: `Sitefinity generator not found! Received: ${generator}`
+          }));
+
+          return false;
         }
 
         setPageInfo(prev => ({ ...prev, hasSitefinity: true }));
+        return true;
+
       } catch (error) {
-        console.error('Sitefinity check error:', error);
+        console.error('Generator check error:', error);
         setPageInfo(prev => ({
           ...prev,
-          errorMessage: 'Failed to check for Sitefinity!'
+          errorMessage: 'Generator check error!'
         }));
+        return false;
       }
     }
 
@@ -104,8 +119,9 @@ function Popup() {
           return;
         }
 
-        await checkSitefinity(baseURL);
-        await getCanonicalUrl();
+        const hasSitefinity = await hasSitefinityGenerator();
+
+        if (hasSitefinity) await getCanonicalUrl();
 
         setIsLoading(false);
       } catch (error) {
