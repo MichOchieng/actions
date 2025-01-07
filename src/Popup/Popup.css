@@ -2,11 +2,15 @@
 
 
 @layer components {
+  .smoothed {
+    @apply transition-transform duration-300 ease-in-out;
+  }
+
   .edit-button {
-    @apply bg-green-500 ;
+    @apply bg-[#7CEC2C] text-black smoothed;
   }
 
   .preview-button {
-    @apply bg-white text-black;
+    @apply bg-white text-black smoothed;
   }
 }
