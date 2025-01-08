@@ -5,6 +5,8 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/componen
 import { useState, useEffect, useRef } from 'react'
 import { BeatLoader } from 'react-spinners';
 
+import github from '@/assets/github.svg';
+
 interface PageInfo {
   canonicalUrl: string | null;
   errorMessage: string | null;
@@ -45,25 +47,40 @@ function Popup() {
       }
     }
 
-    async function checkSitefinity(baseURL: string) {
+    async function hasSitefinityGenerator(): Promise<boolean> {
       try {
-        const response = await fetch(`${baseURL}/sitefinity`);
-
-        if (!response.ok) {
+        if (!tabIDRef.current) {
           setPageInfo(prev => ({
             ...prev,
-            errorMessage: 'Sitefinity CMS not found on this domain!'
+            errorMessage: 'No tab id found!'
           }));
-          return;
+          return false;
+        }
+
+        const generator = await chrome.tabs.sendMessage(
+          tabIDRef.current,
+          { type: 'GET_GENERATOR' }
+        );
+
+        if (generator !== 'Sitefinity') {
+          setPageInfo(prev => ({
+            ...prev,
+            errorMessage: `Sitefinity generator not found! Received: ${generator}`
+          }));
+
+          return false;
         }
 
         setPageInfo(prev => ({ ...prev, hasSitefinity: true }));
+        return true;
+
       } catch (error) {
-        console.error('Sitefinity check error:', error);
+        console.error('Generator check error:', error);
         setPageInfo(prev => ({
           ...prev,
-          errorMessage: 'Failed to check for Sitefinity!'
+          errorMessage: 'Generator check error!'
         }));
+        return false;
       }
     }
 
@@ -104,8 +121,9 @@ function Popup() {
           return;
         }
 
-        await checkSitefinity(baseURL);
-        await getCanonicalUrl();
+        const hasSitefinity = await hasSitefinityGenerator();
+
+        if (hasSitefinity) await getCanonicalUrl();
 
         setIsLoading(false);
       } catch (error) {
@@ -130,7 +148,10 @@ function Popup() {
     <main className='h-[100vh] w-[100vw] flex flex-col justify-center items-center'>
       <Card className='w-[300px] h-fit min-h-[200px] mx-auto bg-transparent flex items-center flex-col gap-[1rem] text-white border-none '>
         <CardHeader>
-          <CardTitle className='text-center'><h1>Actions</h1></CardTitle>
+          <CardTitle className='text-center flex flex-row gap-2 items-center'>
+            <h1>Actions</h1>
+            <img src='/icons/action-128.png' alt='Action Icon' className='w-6 h-6' />
+          </CardTitle>
         </CardHeader>
         {/* Main Content */}
         <CardContent className='flex flex-row gap-[1rem]'>
@@ -144,14 +165,14 @@ function Popup() {
               pageInfo.hasSitefinity && pageInfo.canonicalUrl ? (
                 // Has Sitefinity CMS & canonical URL
                 <>
-                  <Button className='edit-button' onClick={() => handleClick('edit')}>Edit</Button>
-                  <Button className='preview-button' onClick={() => handleClick('preview')}>Preview</Button>
+                  <Button className='edit-button' onClick={() => handleClick('edit')}>Edit Page</Button>
+                  <Button className='preview-button' onClick={() => handleClick('preview')}>View Preview</Button>
                 </>
               ) : (
                 // No Sitefinity CMS
                 <>
-                  <Button className='edit-button' disabled>Edit</Button>
-                  <Button className='preview-button' disabled>Preview</Button>
+                  <Button className='edit-button' disabled>Edit Page</Button>
+                  <Button className='preview-button' disabled>View Preview</Button>
                 </>
               )
             )
@@ -159,7 +180,15 @@ function Popup() {
         </CardContent>
         {/* Footer info */}
         <CardFooter className='flex flex-col gap-[1rem]'>
-          {isLoading ? <p className='text-yellow-300'>Checking page...</p> : (pageInfo.errorMessage ? <p className='text-red-500'>{pageInfo.errorMessage}</p> : null)}
+          {isLoading ?
+            <p className='text-yellow-300'>Checking page...</p>
+            : (pageInfo.errorMessage ?
+              <p className='text-[#EA1525]'>{pageInfo.errorMessage}</p> : null)}
+          <p className="text-xs text-[#646C6D] flex flex-row">
+            Found a bug?&nbsp; 
+            <a href="https://github.com/MichOchieng/actions/issues/new" className='flex flex-row' target='blank'> Create an issue &nbsp;<img className="w-5 h-5" src={github} />
+            </a>
+          </p>
         </CardFooter>
       </Card>
     </main>

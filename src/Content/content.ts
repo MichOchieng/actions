@@ -10,6 +10,22 @@ chrome.runtime.onMessage.addListener((req, _, sendResponse) => {
 
     sendResponse(canonicalUrl);
   }
+});
 
-  return true;
+// Get generator meta tag content - Check for Sitefinity
+chrome.runtime.onMessage.addListener((req, _, sendResponse) => {
+  if(req.type === "GET_GENERATOR") {
+    const generatorMeta = document.querySelector('meta[name="Generator"]');
+
+    const generator = generatorMeta
+      ? generatorMeta.getAttribute("content")
+      : null;
+
+    if (generator && generator.includes("Sitefinity")) {
+      sendResponse("Sitefinity");
+    }
+    else {
+      sendResponse(generator);
+    }
+  }
 });
