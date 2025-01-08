@@ -1,6 +1,6 @@
 {
   "manifest_version": 3,
-  "version": "0.1",
+  "version": "1",
   "name": "Actions",
   "description": "This extension is made for quickly editing and previewing webpages built with Sitefinity CMS.",
   "action": {

@@ -1,3 +1,3 @@
-# Chrome Extension Starter
+# Actions for Sitefinity
 
-Basic starting template for chrome extensions
+This extension is made for quickly editing and previewing webpages built with Sitefinity CMS.
