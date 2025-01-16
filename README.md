@@ -4,7 +4,7 @@ A Chrome extension to enhances the workflow for Sitefinity CMS users by providin
 
 ## Installation
 
-- Download the extension from the Chrome Web Store (or load unpacked for development) </br>
+- Download the extension from the [Chrome Web Store](https://chromewebstore.google.com/detail/actions/hciogkjdkinihkdflmdaicaegciacdpj) (or load unpacked for development) </br>
 - Navigate to any page on your Sitefinity-powered website
 - Click the extension icon in your Chrome toolbar to access editing features
 
